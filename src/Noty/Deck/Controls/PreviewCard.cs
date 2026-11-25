@@ -116,9 +116,9 @@ public sealed class PreviewCard : Border
     private static string Meta(Note note)
     {
         var parts = new List<string>();
-        if (note.TaskProgress is { } p) parts.Add($"{p.Done}/{p.Total} done");
+        if (note.TaskProgress is { } p) parts.Add($"{p.Done}/{p.Total} 已完成");
         parts.Add(Fmt.Ago(note.Modified));
-        if (note.Pinned) parts.Add("pinned");
+        if (note.Pinned) parts.Add("已固定");
         return string.Join(" · ", parts);
     }
 

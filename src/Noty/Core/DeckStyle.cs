@@ -13,7 +13,7 @@ public static class DeckStyleNames
 {
     public static string Title(this DeckStyle s) => s switch
     {
-        DeckStyle.Tabs => "Labelled tabs",
-        _ => "Colour chips",
+        DeckStyle.Tabs => "标签页",
+        _ => "色块",
     };
 }

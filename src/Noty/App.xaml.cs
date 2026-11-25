@@ -56,9 +56,9 @@ public partial class App : Application
         _hotKeys.Clear();
 
         var failed = new List<(string Command, Shortcut Shortcut)>();
-        TryRegister("New note", Settings.ScNewNote, Actions.NewNote);
-        TryRegister("All Notes", Settings.ScAllNotes, Actions.OpenAllNotes);
-        TryRegister("Archive", Settings.ScArchive, Actions.OpenArchive);
+        TryRegister("新建便签", Settings.ScNewNote, Actions.NewNote);
+        TryRegister("全部便签", Settings.ScAllNotes, Actions.OpenAllNotes);
+        TryRegister("归档", Settings.ScArchive, Actions.OpenArchive);
 
         if (failed.Count == 0)
         {
@@ -87,17 +87,16 @@ public partial class App : Application
     private static void ShowHotKeyWarning(IReadOnlyList<(string Command, Shortcut Shortcut)> failed)
     {
         var bindings = string.Join("\n", failed.Select(f => $"• {f.Command} — {f.Shortcut}"));
-        var subject = failed.Count == 1 ? "this global shortcut" : "these global shortcuts";
-        var message = $"Noty couldn't register {subject}:\n\n{bindings}\n\n" +
-                      "Windows has reserved the shortcut or another app is already using it. " +
-                      "Choose a different shortcut in Settings.";
+        var message = $"Noty 无法注册以下全局快捷键：\n\n{bindings}\n\n" +
+                      "Windows 已保留该快捷键，或已有其他程序占用。" +
+                      "请在“设置”中改用其他快捷键。";
 
         var owner = Current.Windows.OfType<Window>().FirstOrDefault(w => w.IsActive);
         if (owner is not null)
-            MessageBox.Show(owner, message, "Global shortcut unavailable",
+            MessageBox.Show(owner, message, "全局快捷键不可用",
                 MessageBoxButton.OK, MessageBoxImage.Warning);
         else
-            MessageBox.Show(message, "Global shortcut unavailable",
+            MessageBox.Show(message, "全局快捷键不可用",
                 MessageBoxButton.OK, MessageBoxImage.Warning);
     }
 

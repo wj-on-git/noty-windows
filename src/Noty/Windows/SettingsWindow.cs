@@ -17,7 +17,7 @@ public sealed class SettingsWindow : Window
 
     public SettingsWindow()
     {
-        Title = "Noty — Settings";
+        Title = "Noty — 设置";
         Width = 520;
         Height = 640;
         ResizeMode = ResizeMode.CanResize;
@@ -47,26 +47,26 @@ public sealed class SettingsWindow : Window
     {
         _body.Children.Clear();
 
-        _body.Children.Add(Heading("Shortcuts"));
-        _body.Children.Add(Hint("Click a shortcut and press the keys you want. " +
-                                "Global ones need no special permission."));
-        _body.Children.Add(ShortcutRow("New note", () => Settings.ScNewNote, v => Settings.ScNewNote = v, global: true));
-        _body.Children.Add(ShortcutRow("All Notes", () => Settings.ScAllNotes, v => Settings.ScAllNotes = v, global: true));
-        _body.Children.Add(ShortcutRow("Archive", () => Settings.ScArchive, v => Settings.ScArchive = v, global: true));
+        _body.Children.Add(Heading("快捷键"));
+        _body.Children.Add(Hint("点击一个快捷键，然后按下想要的新按键。" +
+                                "全局快捷键无需额外权限。"));
+        _body.Children.Add(ShortcutRow("新建便签", () => Settings.ScNewNote, v => Settings.ScNewNote = v, global: true));
+        _body.Children.Add(ShortcutRow("全部便签", () => Settings.ScAllNotes, v => Settings.ScAllNotes = v, global: true));
+        _body.Children.Add(ShortcutRow("归档", () => Settings.ScArchive, v => Settings.ScArchive = v, global: true));
 
-        _body.Children.Add(Heading("Inside a note"));
-        _body.Children.Add(ShortcutRow("Close", () => Settings.ScClose, v => Settings.ScClose = v,
+        _body.Children.Add(Heading("便签内操作"));
+        _body.Children.Add(ShortcutRow("关闭", () => Settings.ScClose, v => Settings.ScClose = v,
             allowPlainEscape: true));
-        _body.Children.Add(ShortcutRow("Find in note", () => Settings.ScFind, v => Settings.ScFind = v));
-        _body.Children.Add(ShortcutRow("Task on / off", () => Settings.ScTask, v => Settings.ScTask = v));
-        _body.Children.Add(ShortcutRow("Cycle colour", () => Settings.ScColour, v => Settings.ScColour = v));
-        _body.Children.Add(ShortcutRow("Pin", () => Settings.ScPin, v => Settings.ScPin = v));
-        _body.Children.Add(ShortcutRow("Archive note", () => Settings.ScArchiveNote, v => Settings.ScArchiveNote = v));
-        _body.Children.Add(ShortcutRow("Delete", () => Settings.ScDelete, v => Settings.ScDelete = v));
-        _body.Children.Add(ShortcutRow("Bigger text", () => Settings.ScBigger, v => Settings.ScBigger = v));
-        _body.Children.Add(ShortcutRow("Smaller text", () => Settings.ScSmaller, v => Settings.ScSmaller = v));
+        _body.Children.Add(ShortcutRow("在便签内查找", () => Settings.ScFind, v => Settings.ScFind = v));
+        _body.Children.Add(ShortcutRow("切换任务", () => Settings.ScTask, v => Settings.ScTask = v));
+        _body.Children.Add(ShortcutRow("切换颜色", () => Settings.ScColour, v => Settings.ScColour = v));
+        _body.Children.Add(ShortcutRow("固定便签", () => Settings.ScPin, v => Settings.ScPin = v));
+        _body.Children.Add(ShortcutRow("归档便签", () => Settings.ScArchiveNote, v => Settings.ScArchiveNote = v));
+        _body.Children.Add(ShortcutRow("删除", () => Settings.ScDelete, v => Settings.ScDelete = v));
+        _body.Children.Add(ShortcutRow("增大文字", () => Settings.ScBigger, v => Settings.ScBigger = v));
+        _body.Children.Add(ShortcutRow("减小文字", () => Settings.ScSmaller, v => Settings.ScSmaller = v));
 
-        _body.Children.Add(Heading("The note"));
+        _body.Children.Add(Heading("便签"));
 
         var faces = new ComboBox { Margin = new Thickness(0, 4, 0, 10) };
         foreach (var f in Ink.Faces) faces.Items.Add(f.Name);
@@ -75,7 +75,7 @@ public sealed class SettingsWindow : Window
         {
             if (faces.SelectedIndex >= 0) Actions.SetNoteFont(Ink.Faces[faces.SelectedIndex].Family);
         };
-        _body.Children.Add(Labelled("Note face", faces));
+        _body.Children.Add(Labelled("便签字体", faces));
 
         var size = new Slider
         {
@@ -97,12 +97,12 @@ public sealed class SettingsWindow : Window
             Actions.SetFontSize(e.NewValue);
             sizeLabel.Text = $"{e.NewValue:0.#} pt";
         };
-        _body.Children.Add(Labelled("Text size", size, sizeLabel));
+        _body.Children.Add(Labelled("文字大小", size, sizeLabel));
 
-        _body.Children.Add(Heading("The deck"));
+        _body.Children.Add(Heading("便签栏"));
 
         var edge = new ComboBox { Margin = new Thickness(0, 4, 0, 10) };
-        foreach (var (name, width) in Settings.EdgeWidths) edge.Items.Add($"{name} — {width} px");
+        foreach (var (name, width) in Settings.EdgeWidths) edge.Items.Add($"{name} — {width} 像素");
         edge.SelectedIndex = Math.Max(0, Array.FindIndex(Settings.EdgeWidths,
             e => Math.Abs(e.Width - Settings.EdgeWidth) < 0.01));
         edge.SelectionChanged += (_, _) =>
@@ -111,7 +111,7 @@ public sealed class SettingsWindow : Window
             Settings.EdgeWidth = Settings.EdgeWidths[edge.SelectedIndex].Width;
             Actions.Refresh();
         };
-        _body.Children.Add(Labelled("Wake the deck within", edge));
+        _body.Children.Add(Labelled("唤醒便签栏的距离", edge));
 
         var style = new ComboBox { Margin = new Thickness(0, 4, 0, 10) };
         foreach (DeckStyle s in Enum.GetValues<DeckStyle>()) style.Items.Add(s.Title());
@@ -120,7 +120,7 @@ public sealed class SettingsWindow : Window
         {
             if (style.SelectedIndex >= 0) Actions.SetDeckStyle((DeckStyle)style.SelectedIndex);
         };
-        _body.Children.Add(Labelled("Deck style", style));
+        _body.Children.Add(Labelled("便签栏样式", style));
 
         var scale = new Slider
         {
@@ -142,20 +142,20 @@ public sealed class SettingsWindow : Window
             Actions.SetDeckScale(e.NewValue);
             scaleLabel.Text = $"{e.NewValue * 100:0} %";
         };
-        _body.Children.Add(Labelled("Deck size", scale, scaleLabel));
+        _body.Children.Add(Labelled("便签栏大小", scale, scaleLabel));
 
-        _body.Children.Add(Toggle("Keep the deck fanned out", Settings.KeepFanned,
+        _body.Children.Add(Toggle("让便签栏常驻展开", Settings.KeepFanned,
             _ => Actions.ToggleKeepFanned()));
-        _body.Children.Add(Toggle("Dock the deck to the left edge", Settings.DeckOnLeftEdge,
+        _body.Children.Add(Toggle("将便签栏停靠到左边缘", Settings.DeckOnLeftEdge,
             _ => Actions.ToggleDeckEdge()));
-        _body.Children.Add(Toggle("Keep the deck over full-screen apps", Settings.ShowOverFullScreen,
+        _body.Children.Add(Toggle("在全屏应用上方显示便签栏", Settings.ShowOverFullScreen,
             _ => Actions.ToggleOverFullScreen()));
-        _body.Children.Add(Toggle("Style Markdown as you type", Settings.MarkdownStyling, v =>
+        _body.Children.Add(Toggle("输入时实时渲染 Markdown", Settings.MarkdownStyling, v =>
         {
             Settings.MarkdownStyling = v;
             Actions.Refresh();
         }));
-        _body.Children.Add(Toggle("Launch at login", Settings.LaunchAtLogin,
+        _body.Children.Add(Toggle("开机时启动", Settings.LaunchAtLogin,
             _ => Actions.ToggleLaunchAtLogin()));
     }
 
@@ -231,7 +231,7 @@ public sealed class SettingsWindow : Window
             BorderThickness = new Thickness(0),
             Padding = new Thickness(8, 4, 8, 4),
             Cursor = Cursors.Hand,
-            ToolTip = "Click, then press the keys",
+            ToolTip = "点击后按下按键",
         };
         Grid.SetColumn(field, 1);
 
@@ -240,7 +240,7 @@ public sealed class SettingsWindow : Window
         {
             recording = true;
             _recordingShortcut = true;
-            field.Content = "Press keys…";
+            field.Content = "请按键…";
             field.Focus();
         };
         field.LostFocus += (_, _) =>
@@ -264,7 +264,7 @@ public sealed class SettingsWindow : Window
                 recording = false;
                 _recordingShortcut = false;
                 field.Content = get().ToString();
-                MessageBox.Show(this, error, "Shortcut unavailable",
+                MessageBox.Show(this, error, "快捷键不可用",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
@@ -286,20 +286,19 @@ public sealed class SettingsWindow : Window
         // A global shortcut without a modifier would take an ordinary typing key
         // away from every application on the desktop.
         if (global && candidate.Modifiers == ModifierKeys.None)
-            return "Global shortcuts must include Ctrl, Alt, Shift, or Win.";
+            return "全局快捷键必须包含 Ctrl、Alt、Shift 或 Win。";
 
         // Plain Esc is the note-closing gesture. It remains a valid default for the
         // Close command itself, but cannot be reassigned to another in-note action.
         if (!global && !allowPlainEscape && candidate.Key == Key.Escape
                     && candidate.Modifiers == ModifierKeys.None)
-            return "Esc is reserved for closing the note. Choose a modified shortcut instead.";
+            return "Esc 保留用于关闭便签，请改用带修饰键的快捷键。";
 
         foreach (var (otherTitle, shortcut) in AllShortcuts())
         {
             if (otherTitle == title) continue;
             if (shortcut.Equals(candidate))
-                return $"{candidate} is already assigned to “{otherTitle}”. " +
-                       "Choose a different shortcut.";
+                return $"{candidate} 已分配给“{otherTitle}”，请换一个快捷键。";
         }
 
         return null;
@@ -307,17 +306,17 @@ public sealed class SettingsWindow : Window
 
     private static IEnumerable<(string Title, Shortcut Shortcut)> AllShortcuts()
     {
-        yield return ("New note", Settings.ScNewNote);
-        yield return ("All Notes", Settings.ScAllNotes);
-        yield return ("Archive", Settings.ScArchive);
-        yield return ("Close", Settings.ScClose);
-        yield return ("Find in note", Settings.ScFind);
-        yield return ("Task on / off", Settings.ScTask);
-        yield return ("Cycle colour", Settings.ScColour);
-        yield return ("Pin", Settings.ScPin);
-        yield return ("Archive note", Settings.ScArchiveNote);
-        yield return ("Delete", Settings.ScDelete);
-        yield return ("Bigger text", Settings.ScBigger);
-        yield return ("Smaller text", Settings.ScSmaller);
+        yield return ("新建便签", Settings.ScNewNote);
+        yield return ("全部便签", Settings.ScAllNotes);
+        yield return ("归档", Settings.ScArchive);
+        yield return ("关闭", Settings.ScClose);
+        yield return ("在便签内查找", Settings.ScFind);
+        yield return ("切换任务", Settings.ScTask);
+        yield return ("切换颜色", Settings.ScColour);
+        yield return ("固定便签", Settings.ScPin);
+        yield return ("归档便签", Settings.ScArchiveNote);
+        yield return ("删除", Settings.ScDelete);
+        yield return ("增大文字", Settings.ScBigger);
+        yield return ("减小文字", Settings.ScSmaller);
     }
 }

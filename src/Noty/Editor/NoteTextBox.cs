@@ -79,6 +79,21 @@ public sealed class NoteTextBox : RichTextBox
 
         EnableSpellCheck();
 
+        // Text Services Framework input methods — which most modern Chinese IMEs
+        // are — never send WM_IME_STARTCOMPOSITION, so the message hook below cannot
+        // see their compositions. WPF reports a composition as text input
+        // start/update events and its commit as text input. Rebuilding the document
+        // while one is in flight invalidates the input method's range: the text
+        // being composed, and often the text it was committed into, is thrown away.
+        AddHandler(TextCompositionManager.TextInputStartEvent,
+            new TextCompositionEventHandler((_, _) => HoldStyling()));
+        AddHandler(TextCompositionManager.TextInputUpdateEvent,
+            new TextCompositionEventHandler((_, _) => HoldStyling()));
+        AddHandler(TextCompositionManager.PreviewTextInputEvent,
+            new TextCompositionEventHandler((_, _) => ReleaseStyling()));
+        AddHandler(TextCompositionManager.TextInputEvent,
+            new TextCompositionEventHandler((_, _) => ReleaseStyling()));
+
         Loaded += (_, _) => HookInputMethod();
         Unloaded += (_, _) => UnhookInputMethod();
     }
@@ -116,21 +131,33 @@ public sealed class NoteTextBox : RichTextBox
         switch (msg)
         {
             case WM_IME_STARTCOMPOSITION:
-                _composing = true;
-                _restyle.Stop();
+                HoldStyling();
                 break;
             case WM_IME_ENDCOMPOSITION:
-                _composing = false;
-                if (_restylePending)
-                {
-                    _restylePending = false;
-                    // After the composition has been committed, not in the middle of
-                    // the message that commits it.
-                    Dispatcher.BeginInvoke(Restyle, DispatcherPriority.Background);
-                }
+                ReleaseStyling();
                 break;
         }
         return IntPtr.Zero;
+    }
+
+    /// A composition is in flight: the document must not be touched until it ends.
+    /// See the input method remarks above and the text-composition handlers in the
+    /// constructor.
+    private void HoldStyling()
+    {
+        _composing = true;
+        _restyle.Stop();
+    }
+
+    private void ReleaseStyling()
+    {
+        if (!_composing) return;
+        _composing = false;
+        if (!_restylePending) return;
+        _restylePending = false;
+        // After the composition has been committed, not in the middle of the
+        // message that commits it.
+        Dispatcher.BeginInvoke(Restyle, DispatcherPriority.Background);
     }
 
     /// Spell-checking follows the text, not the keyboard.
@@ -216,6 +243,10 @@ public sealed class NoteTextBox : RichTextBox
     }
 
     public string PlainText => DocMap.PlainText(Document);
+
+    /// Exposed for tests: true while an input method is composing, when the document
+    /// must not be rebuilt.
+    internal bool IsComposing => _composing;
 
     public int CaretIndex
     {
@@ -358,8 +389,11 @@ public sealed class NoteTextBox : RichTextBox
     }
 
     /// Replace the whole body from code — used by the checkbox toggle and Ctrl+T.
+    /// Ignored while an input method is composing: rebuilding then would throw the
+    /// unfinished composition away.
     public void SetBody(string text, int caret)
     {
+        if (_composing) return;
         _editSeries = null;
         Push();
         Rebuild(text, caret);
@@ -546,7 +580,7 @@ public sealed class NoteTextBox : RichTextBox
 
     public void UndoEdit()
     {
-        if (_undo.Count == 0) return;
+        if (_composing || _undo.Count == 0) return;
         _restyle.Stop();
         _editSeries = null;
         var entry = _undo[^1];
@@ -558,7 +592,7 @@ public sealed class NoteTextBox : RichTextBox
 
     public void RedoEdit()
     {
-        if (_redo.Count == 0) return;
+        if (_composing || _redo.Count == 0) return;
         _restyle.Stop();
         _editSeries = null;
         var entry = _redo[^1];
@@ -662,6 +696,14 @@ public sealed class NoteTextBox : RichTextBox
 
     protected override void OnPreviewKeyDown(KeyEventArgs e)
     {
+        // While an input method is composing, the keys belong to it. Return commits
+        // the composition, and rebuilding the document here would destroy it.
+        if (_composing)
+        {
+            base.OnPreviewKeyDown(e);
+            return;
+        }
+
         if (e.Key == Key.Z && Keyboard.Modifiers == ModifierKeys.Control)
         {
             UndoEdit();

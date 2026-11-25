@@ -16,7 +16,7 @@ public sealed class Note
 
     public NoteColor Palette => NoteColor.At(Color);
 
-    public string DisplayTitle => string.IsNullOrEmpty(Title) ? "New note" : Title;
+    public string DisplayTitle => string.IsNullOrEmpty(Title) ? "新便签" : Title;
 
     public Note Copy() => (Note)MemberwiseClone();
 

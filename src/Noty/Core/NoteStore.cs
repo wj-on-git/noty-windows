@@ -241,15 +241,15 @@ public sealed class NoteStore : INotifyPropertyChanged, IDisposable
     private void SeedWelcomeNote()
     {
         Create("""
-        Welcome to Noty
+        欢迎使用 Noty
 
-        Your notes live at the edge of the screen. Slide the pointer to the right edge and the deck fans out.
+        便签就住在屏幕边缘。把指针移到屏幕右侧边缘，便签栏就会展开。
 
-        Ctrl+Alt+N  new note
-        Ctrl+Alt+A  all notes
-        Ctrl+Alt+L  archive
+        Ctrl+Alt+N  新建便签
+        Ctrl+Alt+A  全部便签
+        Ctrl+Alt+L  归档
 
-        Inside a note: Esc closes, Ctrl+F finds, Ctrl+. cycles the colour, Ctrl+Shift+Backspace deletes with ten seconds to undo.
+        便签内：Esc 关闭，Ctrl+F 查找，Ctrl+. 切换颜色，Ctrl+Shift+Backspace 删除并可在十秒内撤销。
         """, color: 0);
     }
 

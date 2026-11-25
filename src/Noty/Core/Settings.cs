@@ -125,7 +125,7 @@ public static class Settings
     /// Body text size inside a note.
     public static readonly (string Name, double Size)[] FontSizes =
     {
-        ("Small", 12), ("Medium", 13.5), ("Large", 15.5), ("Extra Large", 18),
+        ("小", 12), ("中", 13.5), ("大", 15.5), ("特大", 18),
     };
 
     public const double FontMin = 10, FontMax = 30;
@@ -148,7 +148,7 @@ public static class Settings
     /// easier to hit; a narrower one stays further out of the way.
     public static readonly (string Name, double Width)[] EdgeWidths =
     {
-        ("Narrow", 8), ("Standard", 14), ("Wide", 28), ("Very wide", 44),
+        ("窄", 8), ("标准", 14), ("宽", 28), ("很宽", 44),
     };
 
     public static double EdgeWidth

@@ -843,13 +843,13 @@ public sealed class DeckController : IDisposable
     private void AttachNoteMenu(FrameworkElement el, Note note)
     {
         var menu = new ContextMenu();
-        menu.Items.Add(MenuItemFor(note.Pinned ? "Unpin" : "Pin",
+        menu.Items.Add(MenuItemFor(note.Pinned ? "取消固定" : "固定",
             () => NoteStore.Shared.TogglePin(note.Id)));
-        menu.Items.Add(MenuItemFor("Archive", () => NoteStore.Shared.SetArchived(note.Id, true)));
-        menu.Items.Add(MenuItemFor($"Cycle colour  {Settings.ScColour}",
+        menu.Items.Add(MenuItemFor("归档", () => NoteStore.Shared.SetArchived(note.Id, true)));
+        menu.Items.Add(MenuItemFor($"切换颜色  {Settings.ScColour}",
             () => NoteStore.Shared.CycleColor(note.Id)));
         menu.Items.Add(new Separator());
-        menu.Items.Add(MenuItemFor("Delete", () =>
+        menu.Items.Add(MenuItemFor("删除", () =>
         {
             NoteStore.Shared.Delete(note.Id);
             if (State.ExpandedId == note.Id) Collapse();

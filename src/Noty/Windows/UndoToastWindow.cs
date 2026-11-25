@@ -31,8 +31,8 @@ public sealed class UndoToast
         var label = new TextBlock
         {
             Text = string.IsNullOrWhiteSpace(pending.Note.Title)
-                ? "Note deleted"
-                : $"Deleted “{pending.Note.DisplayTitle}”",
+                ? "便签已删除"
+                : $"已删除“{pending.Note.DisplayTitle}”",
             FontFamily = Ink.SystemFace,
             FontSize = 12,
             Foreground = NoteColor.Tint(Colors.White, 0.92),
@@ -51,7 +51,7 @@ public sealed class UndoToast
 
         var undo = new Button
         {
-            Content = "Undo",
+            Content = "撤销",
             FontFamily = Ink.SystemFace,
             FontSize = 11.5,
             Padding = new Thickness(10, 3, 10, 3),
@@ -104,7 +104,7 @@ public sealed class UndoToast
         _tick.Tick += (_, _) =>
         {
             var left = (pending.Deadline - DateTime.Now).TotalSeconds;
-            if (_countdown is not null) _countdown.Text = $"{Math.Max(0, Math.Ceiling(left))} s";
+            if (_countdown is not null) _countdown.Text = $"{Math.Max(0, Math.Ceiling(left))} 秒";
             if (left <= 0) Hide();
         };
         _tick.Start();

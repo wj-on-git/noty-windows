@@ -174,16 +174,16 @@ public sealed class NoteEditorControl : Grid
         right.Children.Add(_savedLabel);
 
         var pin = IconButton(_note.Pinned ? "📌" : "📍",
-            _note.Pinned ? $"Unpin — {Settings.ScPin}" : $"Pin so it stays open  {Settings.ScPin}",
+            _note.Pinned ? $"取消固定 — {Settings.ScPin}" : $"固定后便签保持打开  {Settings.ScPin}",
             _pal.InkAt(_note.Pinned ? 0.85 : 0.4),
             () => NoteStore.Shared.TogglePin(_note.Id));
         _pinGlyph = (pin as Button)?.Content as TextBlock;
         right.Children.Add(pin);
 
-        right.Children.Add(IconButton("☑", $"Task  {Settings.ScTask}", _pal.InkAt(0.5),
+        right.Children.Add(IconButton("☑", $"任务  {Settings.ScTask}", _pal.InkAt(0.5),
             ToggleTaskLine));
 
-        right.Children.Add(IconButton("🔍", $"Find  {Settings.ScFind}", _pal.InkAt(0.5),
+        right.Children.Add(IconButton("🔍", $"查找  {Settings.ScFind}", _pal.InkAt(0.5),
             ToggleFind));
 
         grid.Children.Add(right);
@@ -243,9 +243,9 @@ public sealed class NoteEditorControl : Grid
         _findCount.Margin = new Thickness(6, 0, 6, 0);
         row.Children.Add(_findCount);
 
-        row.Children.Add(IconButton("▲", "Previous", _pal.InkAt(0.55),
+        row.Children.Add(IconButton("▲", "上一个", _pal.InkAt(0.55),
             () => _text.FindNext(_findField.Text, forward: false)));
-        row.Children.Add(IconButton("▼", "Next", _pal.InkAt(0.55),
+        row.Children.Add(IconButton("▼", "下一个", _pal.InkAt(0.55),
             () => _text.FindNext(_findField.Text)));
 
         bar.Child = row;
@@ -294,18 +294,18 @@ public sealed class NoteEditorControl : Grid
             VerticalAlignment = VerticalAlignment.Center,
         };
         SetColumn(buttons, 2);
-        buttons.Children.Add(FooterButton("Archive", () =>
+        buttons.Children.Add(FooterButton("归档", () =>
         {
             Flush();
             NoteStore.Shared.SetArchived(_note.Id, true);
             _controller.Collapse();
         }));
-        buttons.Children.Add(FooterButton("Delete", () =>
+        buttons.Children.Add(FooterButton("删除", () =>
         {
             NoteStore.Shared.Delete(_note.Id);
             _controller.Collapse();
         }));
-        buttons.Children.Add(FooterButton("Close", () => _controller.Collapse()));
+        buttons.Children.Add(FooterButton("关闭", () => _controller.Collapse()));
         grid.Children.Add(buttons);
         return grid;
     }
@@ -476,11 +476,11 @@ public sealed class NoteEditorControl : Grid
         _savedLabelTimer.Stop();
         if (_savedAt is not { } savedAt)
         {
-            _savedLabel.Text = "Not saved";
+            _savedLabel.Text = "未保存";
             return;
         }
 
-        _savedLabel.Text = $"Saved · {Fmt.Ago(savedAt)}";
+        _savedLabel.Text = $"已保存 · {Fmt.Ago(savedAt)}";
         if (!IsLoaded) return;
 
         var age = DateTime.Now - savedAt;

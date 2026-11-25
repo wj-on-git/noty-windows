@@ -35,10 +35,10 @@ public sealed class ShortcutAndFormattingTests
     {
         Assert.Multiple(() =>
         {
-            Assert.That(Fmt.Ago(DateTime.Now.AddSeconds(-10)), Is.EqualTo("just now"));
-            Assert.That(Fmt.Ago(DateTime.Now.AddMinutes(-5)), Is.EqualTo("5 min ago"));
-            Assert.That(Fmt.Ago(DateTime.Now.AddHours(-3)), Is.EqualTo("3 h ago"));
-            Assert.That(Fmt.Ago(DateTime.Now.AddDays(-2)), Is.EqualTo("2 d ago"));
+            Assert.That(Fmt.Ago(DateTime.Now.AddSeconds(-10)), Is.EqualTo("刚刚"));
+            Assert.That(Fmt.Ago(DateTime.Now.AddMinutes(-5)), Is.EqualTo("5 分钟前"));
+            Assert.That(Fmt.Ago(DateTime.Now.AddHours(-3)), Is.EqualTo("3 小时前"));
+            Assert.That(Fmt.Ago(DateTime.Now.AddDays(-2)), Is.EqualTo("2 天前"));
         });
     }
 }

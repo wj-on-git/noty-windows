@@ -28,14 +28,14 @@ public sealed class NoteColor
 
     public static readonly IReadOnlyList<NoteColor> All = new[]
     {
-        new NoteColor("Lemon", 0xFCE795, 0xE0AD08, 0x3A3008),
-        new NoteColor("Peach", 0xFBCFA6, 0xE2762A, 0x422413),
-        new NoteColor("Rose",  0xFAC4D1, 0xDC4570, 0x40161F),
-        new NoteColor("Lilac", 0xD9C7FA, 0x7C4DEE, 0x2A1B44),
-        new NoteColor("Sky",   0xBEDDFA, 0x2280D6, 0x13293A),
-        new NoteColor("Mint",  0xB4E8D0, 0x0E9B6E, 0x0F2E23),
-        new NoteColor("Sand",  0xE3D3B4, 0xA37B3C, 0x372C18),
-        new NoteColor("Slate", 0xCBD6E2, 0x4E6579, 0x1A242E),
+        new NoteColor("柠檬", 0xFCE795, 0xE0AD08, 0x3A3008),
+        new NoteColor("蜜桃", 0xFBCFA6, 0xE2762A, 0x422413),
+        new NoteColor("玫瑰", 0xFAC4D1, 0xDC4570, 0x40161F),
+        new NoteColor("丁香", 0xD9C7FA, 0x7C4DEE, 0x2A1B44),
+        new NoteColor("天空", 0xBEDDFA, 0x2280D6, 0x13293A),
+        new NoteColor("薄荷", 0xB4E8D0, 0x0E9B6E, 0x0F2E23),
+        new NoteColor("沙褐", 0xE3D3B4, 0xA37B3C, 0x372C18),
+        new NoteColor("石板", 0xCBD6E2, 0x4E6579, 0x1A242E),
     };
 
     public static NoteColor At(int i) => All[((i % All.Count) + All.Count) % All.Count];

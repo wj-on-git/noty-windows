@@ -138,15 +138,15 @@ public static class Actions
     {
         var menu = new ContextMenu();
 
-        menu.Items.Add(Item($"New Note  {Settings.ScNewNote}", NewNote));
-        menu.Items.Add(Item($"All Notes  {Settings.ScAllNotes}", OpenAllNotes));
-        menu.Items.Add(Item($"Archive  {Settings.ScArchive}", OpenArchive));
+        menu.Items.Add(Item($"新建便签  {Settings.ScNewNote}", NewNote));
+        menu.Items.Add(Item($"全部便签  {Settings.ScAllNotes}", OpenAllNotes));
+        menu.Items.Add(Item($"归档  {Settings.ScArchive}", OpenArchive));
         menu.Items.Add(new Separator());
 
-        menu.Items.Add(Check("Show over full-screen apps", Settings.ShowOverFullScreen,
+        menu.Items.Add(Check("在全屏应用上方显示", Settings.ShowOverFullScreen,
             ToggleOverFullScreen));
 
-        var style = new MenuItem { Header = "Deck style" };
+        var style = new MenuItem { Header = "便签栏样式" };
         foreach (DeckStyle s in Enum.GetValues<DeckStyle>())
         {
             var captured = s;
@@ -154,7 +154,7 @@ public static class Actions
         }
         menu.Items.Add(style);
 
-        var font = new MenuItem { Header = "Note font" };
+        var font = new MenuItem { Header = "便签字体" };
         foreach (var f in Ink.Faces)
         {
             var captured = f;
@@ -163,7 +163,7 @@ public static class Actions
         }
         menu.Items.Add(font);
 
-        var text = new MenuItem { Header = "Text size" };
+        var text = new MenuItem { Header = "文字大小" };
         foreach (var (name, size) in Settings.FontSizes)
         {
             var captured = size;
@@ -172,11 +172,11 @@ public static class Actions
         }
         menu.Items.Add(text);
 
-        var deckSize = new MenuItem { Header = "Deck size" };
+        var deckSize = new MenuItem { Header = "便签栏大小" };
         foreach (var (name, value) in new[]
                  {
-                     ("Small — 80%", 0.8), ("Standard — 100%", 1.0),
-                     ("Large — 130%", 1.3), ("Extra large — 160%", 1.6),
+                     ("小 — 80%", 0.8), ("标准 — 100%", 1.0),
+                     ("大 — 130%", 1.3), ("特大 — 160%", 1.6),
                  })
         {
             var captured = value;
@@ -185,26 +185,26 @@ public static class Actions
         }
         menu.Items.Add(deckSize);
 
-        menu.Items.Add(Check("Keep deck fanned out", Settings.KeepFanned, ToggleKeepFanned));
-        menu.Items.Add(Check("Dock deck to left edge", Settings.DeckOnLeftEdge, ToggleDeckEdge));
+        menu.Items.Add(Check("让便签栏常驻展开", Settings.KeepFanned, ToggleKeepFanned));
+        menu.Items.Add(Check("将便签栏停靠到左边缘", Settings.DeckOnLeftEdge, ToggleDeckEdge));
         menu.Items.Add(new Separator());
-        menu.Items.Add(Check("Launch at login", Settings.LaunchAtLogin, ToggleLaunchAtLogin));
+        menu.Items.Add(Check("开机时启动", Settings.LaunchAtLogin, ToggleLaunchAtLogin));
         menu.Items.Add(new Separator());
 
-        var export = new MenuItem { Header = "Export" };
-        export.Items.Add(Item("Markdown (one file per note)…",
+        var export = new MenuItem { Header = "导出" };
+        export.Items.Add(Item("Markdown（每篇便签一个文件）…",
             () => Transfer.Export(Transfer.Format.Markdown, NoteStore.Shared.Notes.ToList())));
-        export.Items.Add(Item("Plain text (one file per note)…",
+        export.Items.Add(Item("纯文本（每篇便签一个文件）…",
             () => Transfer.Export(Transfer.Format.PlainText, NoteStore.Shared.Notes.ToList())));
-        export.Items.Add(Item("Single document…",
+        export.Items.Add(Item("单个文档…",
             () => Transfer.Export(Transfer.Format.SingleFile, NoteStore.Shared.Notes.ToList())));
-        export.Items.Add(Item("Sticky archive (.stickies)…",
+        export.Items.Add(Item("便签归档（.stickies）…",
             () => Transfer.Export(Transfer.Format.Stickies, NoteStore.Shared.Notes.ToList())));
         menu.Items.Add(export);
-        menu.Items.Add(Item("Import…", Transfer.Import));
+        menu.Items.Add(Item("导入…", Transfer.Import));
         menu.Items.Add(new Separator());
-        menu.Items.Add(Item("Settings…", OpenSettings));
-        menu.Items.Add(Item("Quit Noty", Quit));
+        menu.Items.Add(Item("设置…", OpenSettings));
+        menu.Items.Add(Item("退出 Noty", Quit));
 
         return menu;
     }

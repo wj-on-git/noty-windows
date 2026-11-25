@@ -78,7 +78,7 @@ public static class Transfer
     {
         if (notes.Count == 0)
         {
-            Alert("Nothing to export", "There are no notes yet.");
+            Alert("没有可导出的内容", "目前还没有任何便签。");
             return;
         }
         switch (format)
@@ -95,8 +95,7 @@ public static class Transfer
     {
         var picker = new OpenFolderDialog
         {
-            Title = $"Choose a folder for {notes.Count} {ext.ToUpperInvariant()} " +
-                    $"file{(notes.Count == 1 ? "" : "s")}",
+            Title = $"选择用于保存 {notes.Count} 个 {ext.ToUpperInvariant()} 文件的文件夹",
         };
         if (picker.ShowDialog() != true) return;
         var dir = picker.FolderName;
@@ -121,7 +120,7 @@ public static class Transfer
         }
         Reveal(dir);
         if (written < notes.Count)
-            Alert("Export incomplete", $"Wrote {written} of {notes.Count} notes. See noty.log for details.");
+            Alert("导出未完成", $"已写入 {written}/{notes.Count} 篇便签。详情见 noty.log。");
     }
 
     private static void SingleFile(IReadOnlyList<Note> notes)
@@ -129,17 +128,17 @@ public static class Transfer
         var panel = new SaveFileDialog
         {
             FileName = $"Noty-{Fmt.FileStamp(DateTime.Now)}.md",
-            Filter = "Markdown (*.md)|*.md|Text (*.txt)|*.txt|All files (*.*)|*.*",
+            Filter = "Markdown (*.md)|*.md|文本 (*.txt)|*.txt|所有文件 (*.*)|*.*",
         };
         if (panel.ShowDialog() != true) return;
 
         var doc = string.Join("\n\n---\n\n", notes.Select(n =>
             $"## {n.DisplayTitle}\n" +
-            $"<!-- {n.Palette.Name} · created {Fmt.Stamp(n.Created)} · " +
-            $"modified {Fmt.Stamp(n.Modified)}{(n.Archived ? " · archived" : "")} -->\n\n" +
+            $"<!-- {n.Palette.Name} · 创建于 {Fmt.Stamp(n.Created)} · " +
+            $"修改于 {Fmt.Stamp(n.Modified)}{(n.Archived ? " · 已归档" : "")} -->\n\n" +
             TaskSyntax.ToMarkdown(n.Body)));
 
-        var header = $"# Noty export\n\n{notes.Count} notes · {Fmt.Stamp(DateTime.Now)}\n\n---\n\n";
+        var header = $"# Noty 导出\n\n{notes.Count} 篇便签 · {Fmt.Stamp(DateTime.Now)}\n\n---\n\n";
         Write(header + doc, panel.FileName);
     }
 
@@ -148,7 +147,7 @@ public static class Transfer
         var panel = new SaveFileDialog
         {
             FileName = $"Noty-{Fmt.FileStamp(DateTime.Now)}.stickies",
-            Filter = "Sticky archive (*.stickies)|*.stickies|All files (*.*)|*.*",
+            Filter = "便签归档 (*.stickies)|*.stickies|所有文件 (*.*)|*.*",
         };
         if (panel.ShowDialog() != true) return;
 
@@ -161,8 +160,8 @@ public static class Transfer
         var panel = new OpenFileDialog
         {
             Multiselect = true,
-            Filter = "Noty archives and notes|*.stickies;*.md;*.txt|" +
-                     "Sticky archive (*.stickies)|*.stickies|Text and Markdown|*.md;*.txt",
+            Filter = "Noty 归档与便签|*.stickies;*.md;*.txt|" +
+                     "便签归档 (*.stickies)|*.stickies|文本与 Markdown|*.md;*.txt",
         };
         if (panel.ShowDialog() != true) return;
 
@@ -196,16 +195,16 @@ public static class Transfer
         }
 
         var added = NoteStore.Shared.Ingest(incoming);
-        Alert("Import finished", added == 0
-            ? "Nothing could be read from those files."
-            : $"Added {added} note{(added == 1 ? "" : "s")}.");
+        Alert("导入完成", added == 0
+            ? "未能从这些文件中读取任何内容。"
+            : $"已添加 {added} 篇便签。");
     }
 
     private static string MarkdownBody(Note n)
     {
         var header = $"# {n.DisplayTitle}\n\n" +
-                     $"<!-- {n.Palette.Name} · created {Fmt.Stamp(n.Created)} · " +
-                     $"modified {Fmt.Stamp(n.Modified)}{(n.Archived ? " · archived" : "")} -->\n\n";
+                     $"<!-- {n.Palette.Name} · 创建于 {Fmt.Stamp(n.Created)} · " +
+                     $"修改于 {Fmt.Stamp(n.Modified)}{(n.Archived ? " · 已归档" : "")} -->\n\n";
         // The first line is already the title, so it is not repeated in the body.
         var lines = n.Body.Split('\n').Skip(1);
         return header + TaskSyntax.ToMarkdown(string.Join("\n", lines)).TrimStart('\n');
@@ -213,11 +212,11 @@ public static class Transfer
 
     private static string SafeName(Note n)
     {
-        var title = string.IsNullOrWhiteSpace(n.Title) ? "note" : n.Title;
+        var title = string.IsNullOrWhiteSpace(n.Title) ? "便签" : n.Title;
         var clean = Regex.Replace(title, @"[\\/:*?""<>|\r\n\t]", " ").Trim();
         clean = Regex.Replace(clean, @"\s+", " ");
         if (clean.Length > 48) clean = clean[..48].Trim();
-        if (clean.Length == 0) clean = "note";
+        if (clean.Length == 0) clean = "便签";
         return $"{clean} {Fmt.FileStamp(n.Created)}";
     }
 
@@ -230,7 +229,7 @@ public static class Transfer
         }
         catch (Exception e)
         {
-            Alert("Export failed", e.Message);
+            Alert("导出失败", e.Message);
         }
     }
 

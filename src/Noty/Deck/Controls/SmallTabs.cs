@@ -51,7 +51,7 @@ public sealed class MoreTab : DeckButton
             VerticalAlignment = VerticalAlignment.Center,
             IsHitTestVisible = false,
         });
-        ToolTip = $"{count} more note{(count == 1 ? "" : "s")}";
+        ToolTip = $"还有 {count} 篇便签";
     }
 }
 
@@ -69,10 +69,10 @@ public sealed class EmptyTab : DeckButton
             Fill = new SolidColorBrush(Color.FromArgb(0xD0, 0x2A, 0x2A, 0x2E)),
             Effect = Shapes.Shadow(0.18, 6, onRight ? -2 : 2, 1),
         });
-        var label = VerticalTab.Label("New note", strip, onRight, NoteColor.Tint(Colors.White, 0.72));
+        var label = VerticalTab.Label("新建便签", strip, onRight, NoteColor.Tint(Colors.White, 0.72));
         label.Margin = new Thickness(0);
         Children.Add(label);
-        ToolTip = "New note";
+        ToolTip = "新建便签";
     }
 }
 
@@ -104,7 +104,7 @@ public sealed class PlusButton : DeckButton
             IsHitTestVisible = false,
         });
         RenderTransformOrigin = new Point(0.5, 0.5);
-        ToolTip = "New note  " + Settings.ScNewNote;
+        ToolTip = "新建便签  " + Settings.ScNewNote;
     }
 
     protected override void OnHover(bool hovering)

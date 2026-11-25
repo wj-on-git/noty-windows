@@ -1,5 +1,6 @@
 using System.Threading;
 using System.Windows;
+using System.Windows.Input;
 using Noty.Core;
 using Noty.Editor;
 using NUnit.Framework;
@@ -85,6 +86,37 @@ public sealed class NoteTextBoxTests
         editor.RaiseEvent(args);
 
         Assert.That(args.CommandCancelled, Is.True);
+    }
+
+    [Test]
+    public void Restyling_is_held_while_an_input_method_is_composing()
+    {
+        var editor = Editor("before");
+        var document = editor.Document;
+
+        var composition = new TextComposition(InputManager.Current, editor, "拼");
+        editor.RaiseEvent(new TextCompositionEventArgs(
+            InputManager.Current.PrimaryKeyboardDevice, composition)
+        {
+            RoutedEvent = TextCompositionManager.TextInputStartEvent,
+        });
+        Assert.That(editor.IsComposing, Is.True, "editor should hold styling");
+        editor.Restyle(NoteColor.At(1), 16);
+
+        Assert.That(editor.Document, Is.SameAs(document),
+            "a composition must not be thrown away by rebuilding the document");
+
+        // What the input method raises when the composition is committed.
+        editor.RaiseEvent(new TextCompositionEventArgs(
+            InputManager.Current.PrimaryKeyboardDevice, composition)
+        {
+            RoutedEvent = TextCompositionManager.PreviewTextInputEvent,
+        });
+        Assert.That(editor.IsComposing, Is.False);
+
+        editor.Restyle(NoteColor.At(1), 16);
+        Assert.That(editor.Document, Is.Not.SameAs(document),
+            "styling resumes once the composition has ended");
     }
 
     private static NoteTextBox Editor(string text)

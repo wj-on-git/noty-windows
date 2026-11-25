@@ -28,7 +28,7 @@ public sealed class NoteTests
     {
         Assert.Multiple(() =>
         {
-            Assert.That(new Note { Title = "" }.DisplayTitle, Is.EqualTo("New note"));
+            Assert.That(new Note { Title = "" }.DisplayTitle, Is.EqualTo("新便签"));
             Assert.That(new Note { Title = "Plan" }.DisplayTitle, Is.EqualTo("Plan"));
         });
     }

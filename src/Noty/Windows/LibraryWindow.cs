@@ -28,7 +28,7 @@ public sealed class LibraryWindow : Window
 
     public LibraryWindow()
     {
-        Title = "Noty — All Notes";
+        Title = "Noty — 全部便签";
         Width = 900;
         Height = 560;
         MinWidth = 620;
@@ -88,7 +88,7 @@ public sealed class LibraryWindow : Window
     public void ShowArchive(bool archived)
     {
         _tabs.SelectedIndex = archived ? 1 : 0;
-        Title = archived ? "Noty — Archive" : "Noty — All Notes";
+        Title = archived ? "Noty — 归档" : "Noty — 全部便签";
     }
 
     private FrameworkElement BuildToolbar()
@@ -98,15 +98,15 @@ public sealed class LibraryWindow : Window
         bar.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
         bar.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
 
-        _tabs.Items.Add(new TabItem { Header = "All Notes" });
-        _tabs.Items.Add(new TabItem { Header = "Archive" });
+        _tabs.Items.Add(new TabItem { Header = "全部便签" });
+        _tabs.Items.Add(new TabItem { Header = "归档" });
         _tabs.SelectedIndex = 0;
         _tabs.Background = Brushes.Transparent;
         _tabs.BorderThickness = new Thickness(0);
         _tabs.SelectionChanged += (_, e) =>
         {
             if (!ReferenceEquals(e.OriginalSource, _tabs)) return;
-            Title = ShowingArchive ? "Noty — Archive" : "Noty — All Notes";
+            Title = ShowingArchive ? "Noty — 归档" : "Noty — 全部便签";
             Reload();
         };
         bar.Children.Add(_tabs);
@@ -115,14 +115,14 @@ public sealed class LibraryWindow : Window
         // action here that makes something rather than acting on what is selected.
         var add = new Button
         {
-            Content = "＋  New note",
+            Content = "＋  新建便签",
             Margin = new Thickness(10, 0, 0, 0),
             Padding = new Thickness(14, 6, 14, 6),
             Background = new SolidColorBrush(Color.FromRgb(0xE0, 0xAD, 0x08)),
             Foreground = new SolidColorBrush(Color.FromRgb(0x27, 0x1F, 0x05)),
             FontWeight = FontWeights.SemiBold,
             VerticalAlignment = VerticalAlignment.Center,
-            ToolTip = "New note  Ctrl+N",
+            ToolTip = "新建便签  Ctrl+N",
         };
         add.Click += (_, _) => NewNote();
         Grid.SetColumn(add, 1);
@@ -174,7 +174,7 @@ public sealed class LibraryWindow : Window
 
         var hint = new TextBlock
         {
-            Text = "Search notes",
+            Text = "搜索便签",
             FontSize = 12.5,
             Foreground = NoteColor.Tint(Colors.White, 0.35),
             VerticalAlignment = VerticalAlignment.Center,
@@ -216,7 +216,7 @@ public sealed class LibraryWindow : Window
             Foreground = NoteColor.Tint(Colors.White, 0.5),
             Margin = new Thickness(6, 0, -4, 0),
             Focusable = false,
-            ToolTip = "Clear",
+            ToolTip = "清除",
         };
         clear.Click += (_, _) =>
         {
@@ -298,12 +298,12 @@ public sealed class LibraryWindow : Window
             Margin = new Thickness(0, 10, 0, 0),
             HorizontalAlignment = HorizontalAlignment.Right,
         };
-        buttons.Children.Add(Action("Cycle colour", () =>
+        buttons.Children.Add(Action("切换颜色", () =>
         {
             if (_selectedId is { } id) NoteStore.Shared.CycleColor(id);
         }));
         // One button, but it says which of the two things it is about to do.
-        _archiveButton = Action("Archive", () =>
+        _archiveButton = Action("归档", () =>
         {
             if (_selectedId is not { } id) return;
             var note = NoteStore.Shared.Get(id);
@@ -311,7 +311,7 @@ public sealed class LibraryWindow : Window
             NoteStore.Shared.SetArchived(id, !note.Archived);
         });
         buttons.Children.Add(_archiveButton);
-        buttons.Children.Add(Action("Delete", () =>
+        buttons.Children.Add(Action("删除", () =>
         {
             if (_selectedId is { } id) NoteStore.Shared.Delete(id);
         }));
@@ -390,7 +390,7 @@ public sealed class LibraryWindow : Window
             TextTrimming = TextTrimming.CharacterEllipsis,
         });
 
-        var meta = n.TaskProgress is { } p ? $"{p.Done}/{p.Total} done · " : "";
+        var meta = n.TaskProgress is { } p ? $"{p.Done}/{p.Total} 已完成 · " : "";
         stack.Children.Add(new TextBlock
         {
             Text = meta + Fmt.Ago(n.Modified),
@@ -439,11 +439,11 @@ public sealed class LibraryWindow : Window
         }
         _selectedId = id;
         _detailTitle.Text = note.DisplayTitle;
-        if (_archiveButton is not null) _archiveButton.Content = note.Archived ? "Restore" : "Archive";
-        _detailMeta.Text = $"{note.Palette.Name} · created {Fmt.Stamp(note.Created)} · " +
-                           $"modified {Fmt.Stamp(note.Modified)}" +
-                           (note.Archived ? " · archived" : "") +
-                           (note.Pinned ? " · pinned" : "");
+        if (_archiveButton is not null) _archiveButton.Content = note.Archived ? "恢复" : "归档";
+        _detailMeta.Text = $"{note.Palette.Name} · 创建于 {Fmt.Stamp(note.Created)} · " +
+                           $"修改于 {Fmt.Stamp(note.Modified)}" +
+                           (note.Archived ? " · 已归档" : "") +
+                           (note.Pinned ? " · 已固定" : "");
         _loading = true;
         _detail.Text = note.Body;
         _loading = false;
@@ -454,7 +454,7 @@ public sealed class LibraryWindow : Window
     private void ClearDetail()
     {
         _selectedId = null;
-        _detailTitle.Text = "No note selected";
+        _detailTitle.Text = "未选择便签";
         _detailMeta.Text = "";
         _loading = true;
         _detail.Text = "";

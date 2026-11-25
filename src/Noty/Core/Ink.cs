@@ -13,7 +13,7 @@ public static class Ink
     /// never offers something that would silently fall back.
     private static readonly NoteFace[] AllFaces =
     {
-        new("System",        "",                  0),
+        new("系统",        "",                  0),
         new("Segoe Script",  "Segoe Script",      1.5),
         new("Ink Free",      "Ink Free",          2.0),
         new("Comic Sans MS", "Comic Sans MS",     0.5),
